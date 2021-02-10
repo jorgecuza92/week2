@@ -1,0 +1,220 @@
+Grocery App Review
+- one to many relationship like this is seen everywhere - amazon product and its reviews, blog post and its comments, etc
+
+- begin with the stores themselves without thinking about items
+
+class Store:
+  def __init
+
+menu - just a series of print statements outlining the options
+
+while True:
+  choice = input("Enter choice:")
+  if choice == "1":
+    do stuff right under choice
+
+def __repr__ function overrides Python so your stuff will display nicely , but it's mostly used for debugging. Azam doesn't really like this and prefers to just loop through the structure and print the specific properties he wants.
+
+def __repr__(self):
+  return f"{self.name} : {self.address}
+
+Most programming languages will show you memory locations if you try to print an object as a whole; you have to specify properties.
+
+add items section: 
+doing for index in range (0, len(store_list)):
+# this will let you print the index
+  store = store_list[index]
+  print(f"{index+1}: {store.name} - {store.address}
+# or you could skip the store reassignment number and do 
+#            print(f"{index+1}: {store_list[index].name} - {store_list[index].address})
+
+          
+
+how do you print all items for a specific store - you have to do a nested for loop, because the item objects are attached to each particular store object.
+
+This was a difficult assignment, but you will see this general structure everywhere, and thus this becomes a model you can refer to forever.
+
+Classes can have functions within them.  If we were to refactor this, we could add an add_item function within the store. This lets us check if the item has already been added to the store or not.  (possible spot for exception handling?)
+so then below once you've created your item, you can just do
+store.item_list.append(item)
+you can also implement a quantity limit rule if you want (5 cartons of milk max, etc)
+(don't have to do this but it's good practice)
+           
+Wednesday's assignment is very much related to the to-do list from last week and this grocery app.
+
+- - -
+Presentations 
+Those who volunteered or were volunteereed:
+DM Azam with the title
+First thing on Friday, <10 minutes, any topic you want
+
+
+- - - - -
+INHERITANCE
+- - - - -
+- This helps us create more modular applications.
+- Consider our car class from yesterday, with make and model properties, drive functions, etc. Maybe we've now added a function for getting gas:
+def fill_up(self): 
+  print("FILL UP GAS")
+
+What if we made a separate class called ElectricCar? Some parts would be the same; it would have a make and model, it would drive, etc. But ElectricCar is a *type* of a car, no? Rather than creating a whole separate class and recreating most of the same properties, we can set it up to *inherit* from the Car class. ElectricCar will be a subclass, while Car is the parent/super class.
+
+##When we do this, we have to call the constructor (init) of the parent class! This is true in many programming languages.##
+
+class ElectricCar(Car):
+  def __init__(self, make, model):
+    super().init__(make, model)
+
+If we don't call super, it will never initialize the super class and never give us the properties of that class. So the above by itself already has make and model properties, the drive function, and the fill_up function. 
+
+But wait, we don't need the fill_up function, right? We need to add a charge function and get rid of the fill_up function. You need to *override* the function = basically rewrite it. Give it the same name, and just change the action of the function to be print("CHARGE THE CAR") or something.
+
+Python *does* allow multiple inheritance, but it is very confusing and most other programming languages don't allow it.  This would mean our ElectricCar class could inherit properties and functions both from Car and from ElectricDrivetrain.
+
+Subinheritance is also a thing; we could create an ElectricScooter subclass that would inherit from ElectricCar (and thus also from Car).
+
+class ElectricScooter(ElectricCar):
+  def __init__(self, make, model):
+    super().__init__(make, model)
+
+The fill_up function on ElectricScooter will reflect how we overrode the one from Car: it will print "CHARGE THE CAR". We can override it again from there to say "CHARGE THE SCOOTER". If we hadn't overridden it within ElectricCar, it would then look to Car and run the original function.
+
+
+
+- - - - -
+EXCEPTION HANDLING
+- - - - -
+
+result = 1/0
+
+This will give us ZeroDivisionError: division by zero when we try to run it.
+The name, ZeroDivisionError, is the key. The error names are *CLASSES*.
+
+Users aren't going to like seeing weird Python error messages and having the program quit on them. How do we give them nice messages and prompt them to enter something better?
+
+Try/Except
+#try must also use except
+
+try:
+  result = 1/0
+  
+except: #what do you want to do when something bad happens?
+  print("Please don't divide by zero!")
+
+The program will still end because there's nothing else going on in this file, but it won't crash in the same way.
+
+What if we change the above a bit? Our current except statement will print no matter what error happens. If we change the try statement to number = input("Enter a number: ") and the user enters a letter, it will still say "Please don't divide by zero!"
+
+We can use known error names to get custom messages based on what kind of error occurred.
+
+try:
+  result = 1/0
+  number = int(input("Enter a number: "))
+except ZeroDivisionError:
+  print("Please don't divide by zero!")
+except: 
+  print("Uh-oh!") #general error statement
+
+Now if we run this, it'll point to the "Uh-oh!"
+If we run the number statment by itself - we'll get ValueError: invalid literal yada yada
+
+So let's add that to our except options.
+
+try:
+  result = 1/0
+  number = int(input("Enter a number: "))
+except ZeroDivisionError:
+  print("Please don't divide by zero!")
+except ValueError:
+  print("Invalid input. Please enter numbers only!)
+except: 
+  print("Uh-oh!") #general error statement
+
+You must have at least one general except statement for any try/except. The more specific ones are optional.
+
+Finally is also an optional statement for try/except/(finally). It executes whether an exception has taken place or not. It's where you close out the resources. Maybe you opened a database connection or a socket in the try block and it blew up; you don't want to leave it open. So you close it in the finally section.
+
+try:
+  result = 1/0
+  number = int(input("Enter a number: "))
+except ZeroDivisionError:
+  print("Please don't divide by zero!")
+except ValueError:
+  print("Invalid input. Please enter numbers only!)
+except: 
+  print("Uh-oh!") #general error statement
+finally:
+  print("FINALLY!")
+
+Else is another optional block, only seen in Python as far as Azam knows. It will run whenever no exceptions are thrown. He has never used it personally.
+
+try:
+  result = 1/0
+  number = int(input("Enter a number: "))
+except ZeroDivisionError:
+  print("Please don't divide by zero!")
+except ValueError:
+  print("Invalid input. Please enter numbers only!)
+except: 
+  print("Uh-oh!") #general error statement
+finally:
+  print("FINALLY!")
+else:
+  print("NO EXCEPTIONS, HOORAY!")
+
+******refactoring this afternoon - user enters store name instead of store number during "select a store by number"******
+
+- - - - -
+UNIT TESTING
+- - - - -
+
+Systems that real, live code runs on are huge! Say you work for a retail establishment and want to implement a 10% off coupon. Does it work everywhere? Can you stack ten of these coupons for 100% off?
+
+There is a QA team in larger organizations, but the tests they are writing are larger and not as targeted. It's your responsibility as a developer to test your code.
+
+Test-Driven Development: write your tests before you even write your code. This is a very advanced concept. Starting with the tests lets you be unbiased, so you don't write a test that avoids conditions that you know will break your code. It also allows you to architect your application.
+1) Write a failing test
+2) Make the test pass
+3) Refactor your code
+3) Repeat
+
+Remember the bank account from yesterday, where you can deposit/withdraw/transfer.
+
+start your filenames with "test"
+
+import unittest module - this contains all the needed functions and classes that we need to run our tests.
+
+first we create a class for our tests; it's a subclass that inherits from the TestCase class contained in the unittests module.
+
+the start of each test function should start with "test". be very, very descriptive with your unit test names.
+
+unittest.main() should be added at the bottom to run your tests.
+
+Writing unittests will end up letting you write much nicer code overall, because you are only writing enough to satisfy the test.
+
+Once test passes, look at your code, see what, if anything, you need to refactor. Then write the next failing test.
+
+setUp function will fire before running each test - this will create your needed object (and whatever else you need)
+
+tearDown function will run after running each test - we don't really need it right now. But it we were writing tests that created physical files, this would be where we removed the file.
+
+UNIT TESTS RULES
+1) Unit tests should be independent of one another. Start with a new, fresh object each time. Any should be able to be run in any order and still pass.
+2) Unit tests should never wait for human input! Why? These tests are usually run automatically. When you publish your code somewhere like Github, it will automatically run your unit tests. If it needs outside input, it will hang.
+3) Unit tests should be repeatable. You should be able to run it a million times and get the same result every time.
+4) Scouting rule applies to unit tests - leave it how you found it. Each test should start with a clean slate.
+
+Lots of discussion going on in this space re: test-driven development, behavior-driven development. Writing good tests may take you a couple of years' experience. But it will help you become a better developer.
+
+WHAT SHOULD YOU BE TESTING? Everything?
+1. Domain/Models/Business Logic - the heart of the application - meaning, your classes
+2. UI tests for your webpages, automated tests, integration tests
+3. Code Coverage - refers to the code which is under test ("80% code coverage" means 80% of the codebase gets tested with the unit tests we have available). For our small functions, we generally have 100% code coverage. But this doesn't mean edge cases don't exist that might blow it up. It also depends on the quality of the tests. You could have something with 0 tests that works - it just might be hard to maintain - you'll be scared every time you have to make a change. Unit testing provides you with the confidence to make changes.
+
+How do we test stuff requiring user input? You just test the logic.
+class CalcTests
+create object
+result = calculator.add(2, 5,+)
+self.assertEqual(result, 7)
+
+With UI tests that we'll get to later, there are sites that will provide random input for you.
