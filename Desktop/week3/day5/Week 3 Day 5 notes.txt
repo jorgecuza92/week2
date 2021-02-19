@@ -1,0 +1,211 @@
+Week 3 Day 5 Notes
+
+Azam is back! Along with some of our other TX folks who finally have power and running water again. Welcome back, everyone!
+
+Review of Bootstrap sites from yesterday: 
+Summer had an issue with her footer - Azam poked into the dev tools to try to find where the problem was - you can highlight your problematic element, find it in the Elements section, and play around with it to see 1) if it's even there, and 2) if you can change the way it appears right in the browser.
+
+Up in the right corner when dev tools are open, if it sees errors, it will have an X in a red circle with the number of errors by it. Click on that, and at the bottom of the dev tools, you can see more specifics about the errors it's finding.
+
+Why not just go directly into the HTML and use an inline style on the footer to brute force it? It's not easily reusable if you want to apply that style to a different element. You also increase the size of the page, increasing load times.  CSS files are downloaded once and cached - if you go back to the same site within a couple of hours, it will load faster because it will read from the cache.
+
+You can apply CSS styles to either the element tag, a class, or an id:
+footer {
+
+}
+
+.footer {
+
+}
+
+#footer {
+
+}
+
+You will be living in the Chrome developer tools as we go along - quickest way to solve problems and find answers. Azam recommends, even if your personal favorite browser is something else, use Chrome for debugging, because their developer tools are the best.
+
+The Console tab is another useful section of the tools. Again, pay attention to the number of errors being displayed in the upper right. Not all of them might be page-breaking errors, but it's still a place to start investigating problems. (A random news page Azam pulled up had 17 errors but seemed fine -- google.com had zero errors.)
+
+*** FLEXBOX ***
+Azam likes Flexbox; Grid is newer, but Flexbox is simpler to use. It also has similarity to Flutter if you end up working with that. Flexbox is only responsive horizontally where Grid responds vertically and horizontally.
+
+Practical examples of Flexbox - the Apple website. As you shrink it, the layout changes. We'll also learn about media queries later today.
+
+Learning 20% of Flexbox will get us through 90% of use cases.
+
+RESPONSIVE design will change the layout as the display size changes - menus collapse into hamburger menus, images change to smaller images, etc.  These changes happen at "breakpoints" - you can code this in.
+
+Let's see if we can recreate the Apple menu bar - in the <body> section, we can add a container <div> element, a menu <div> (could also be a menu element), and a series of internal divs for each link we want in the menu: Mac, iPad, iPhone, and Support.  If we used <div> instead of <menu>, we need to go back and add a class name or id labeling the outer div as our menu. Because we'll only have one menu on the page, Azam is using ID.  <div id = "menu">  Having another menu on a linked page also with the id of "menu" is OK. No performance benefit to using ID vs class - it's whatever you're more comfortable with. Classes are more to share style between items on a page.
+
+What the heck is a <div>? It's basically a theoretical box for different chunks of your site content.
+It helps us to separate items as we build them. If you go to Google news and there's a weather bit in one corner, all of the code for that would be within one outer div. It's also best to have each separate bit of content within a div be in its own separate div (e.g., weather reports for different days).
+
+Having separate mobile sites is becoming a thing of the past; the new way forward is to have one site that accomodates all view sizes. Having multiple sites means every change you make, every sale your store has, etc., has to be made on both sites.
+
+Also in the dev tools, we can simulate different viewports - this is not perfect and the only real way to see how it looks on a smaller device is to pull your site up that way. But it can give us an idea of how it looks.
+
+So if we load our HTML and CSS at this point, our menus divs appear vertically. But we want them horizontally. How can we put Flexbox to work to fix this? We need a row to get it horizontal.
+
+Flexbox has display modes.
+
+Let's go into our dev tools, select the outer menu div, and go into Styles. In element.style, we can quickly add styles and see what it would look like in real time, rather than having to write it out, save it, and refresh the page to see what what we did. Starting with a background color is a great way to test that it's applying the styles where you want them, before you move to the actual style you want to apply.
+
+Adding display: flex; to our element.style {} puts our items into a row, because row is the default. If we wanted a column, we'd add flex-direction: column;
+
+All child elements in a flexbox become flex items.  And a flex item can itself become a flex box.
+
+Ok, now our items are in a row, but they're jammed together like one big word. How can we space them out?
+
+Apply to the divs inside the menu element (#menu div {}  under the Styles menu):
+width: 50%...play around with this until you get it to look how you want.
+
+Flexbox also has several ways to space items that we'll come back to later; one useful one is justify-content. The default is justify-content: flex-start, which crams items at the left or top of the flexbox.
+Let's change ours to justify-content: space-around;
+With this we don't need to style the individual elements in the menu to get decent spacing.
+
+Once you have it how you want, don't forget to go back and add those styles to your CSS file!
+
+You can use both Flexbox and Grid within your page if you want; just be careful because you may get conflicting errors.
+
+How can we get our menu to change to a vertical menu as the page shrinks horizontally? Media breakpoints are the answer
+
+*** MEDIA QUERIES ***
+
+You target different styles to different min-widths.
+
+example: 
+@media (min-width: 320px) and (max-width: 480px) {
+*css you want to apply goes here*
+}
+
+(Don't worry about devices with widths under 320; that doesn't really exist or at least isn't really developed for because it's so rare. Who wants to browse on their Apple watch?)
+
+This would be an example of a breakpoint/query for a mobile phone. The pixels CAN be whatever you want, but these are the most common for mobile phones.  But other sites may have something completely different. Target the devices you want to target.
+
+Example of media queries/breakpoints for various devices:
+https://gist.github.com/gokulkrishh/242e68d1ee94ad05f488
+
+BUT - the @media bit of CSS is not enough. In our HTML, in the <head> tag, we need to tell the browser to go find the width of the device with the following:
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+So to get our smaller menu, we should do:
+@media (min-width: 320px) and (max-width: 480px) {
+  flex-direction: column;
+}
+
+Once you have a flexbox set vertically/columns, justify-content refers to how things within the box move up and down. So it won't really help us here to make things look nicer. So what do we use in this case?  align-items
+
+The align-items property works in the opposite direction of justify-content. So it works left-right in columns and up-down in rows, where justify-content works left-right in rows and up-down in columns.
+
+For our mobile device, let's use center:
+So to get our smaller menu, we should do:
+@media (min-width: 320px) and (max-width: 480px) {
+  flex-direction: column;
+  align-items: center;
+}
+
+We can also apply specific styles to high-resolution desktops:
+@media (min-width: 1281px) {}
+
+Styles we don't have under any specific breakpoint are called "common styles".  Styles under breakpoints only override those specific properties listed under the breakpoint; everything else will still pull from the common styles. So if you just put a background color there, that's the only thing that will change.
+
+It's best to design your site with a mobile-first approach (once you get more proficient with site creation in general). It makes more sense to start with your small/stripped-down version and add stuff as you add more space.
+
+Let's add a banner news update section only seen on desktops.
+In our HTML:
+<div id="covidnews">
+  <div>Click here for Apple's COVID-19 Policies</div>
+</div>
+
+Under our media query for mobile phones - we have to add code to hide this bit:
+
+@media (min-width: 320px) and (max-width: 480px) {
+  #menu {
+    flex-direction: column;
+    align-items: center;
+  }
+  #covidnews {
+    display: none;
+  }
+}
+
+This will make that covid banner not show up on mobile.
+
+
+Now, let's try to replicate the promo in the middle of Apple's homepage:
+<div id="current-offer">
+  <h2>iPhone 12</h2>
+  <label>Blast past fast</label>
+  <label>From $29/month blah blah blah</label>
+</div>
+
+Note from Azam: Don't use text in images - people who use screen readers won't be able to get that text.
+
+Now all of this text appears all crammed together. If we go into the tools and target the "current-offer" div, we can poke around and apply styles to get it to look how we want, then apply those to our CSS. 
+
+#current-offer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+Now we want to add the two links listed side-by-side at the bottom of this section. How do we get those to display in that fashion if our overall div is set up as a column?  We can put a flexbox within a flexbox. 
+
+HTML/CSS naming conventions: snake case with a hyphen instead of an underscore between words.
+
+<div id="current-offer">
+  <h2>iPhone 12</h2>
+  <label>Blast past fast</label>
+  <label>From $29/month blah blah blah</label>
+  <div id="learn-more">
+    <label>Learn more</label>
+    <label>Buy</label>
+  <div>
+</div>
+
+Then CSS
+#learn-more {
+  display: flex;
+}
+(since row is different)
+
+Now...what about the image?
+
+Mac screenshot tools: command-shift-3 gets the whole screen, but command-shift-4 is better -- it gives you a pointer that lets you drag a box over what you want on your screen and it will take a screenshot of just that bit.
+Greenshot and SnagIt are similar options on non-Macs.
+
+
+<div id="current-offer">
+  <h2>iPhone 12</h2>
+  <label>Blast past fast</label>
+  <label>From $29/month blah blah blah</label>
+  <div id="learn-more">
+    <label>Learn more</label>
+    <label>Buy</label>
+  </div>
+  <div id="promo-image">
+  </div>
+</div>
+
+and in our CSS:
+
+#promo-image {
+  background-image: url("images/promo.jpg")
+}
+
+Per Azam: "background images are weird" - sometimes getting them to display properly is a bit of trial and error with starting image size, width/height/min-height properties, etc.
+
+
+
+Google has a site that will test if your page is mobile-friendly:
+https://search.google.com/test/mobile-friendly
+
+If it deems your site not mobile-friendly, it will give you tips for ways to improve that.
+
+You need to put time into making your page mobile-friendly. Google prioritizes mobile-friendly pages in its search results ranking. If you want to be on the first page and not the third page of people's search results, you need to be mobile-friendly. Moreover, SO much browsing these days is on mobile devices. This is not 2009 anymore! Being mobile-friendly is not an extra feature, it's a requirement.
+
+The relevant assignment and activities for what we talked about today are under Week 3, Day 3 on the class GitHub. Start with the assignment. 
+
+Class code for today will be added under Day 3 on GitHub. CSStricks.com also has a good Flexbox tutorial: https://search.google.com/test/mobile-friendly
+
+Monday we will start with JavaScript!
